@@ -1,0 +1,7 @@
+<launch>
+  <node name="test" pkg="agv_robot" type="test1" output="screen">
+    <param name="position_x" type="double" value="0" />
+    <param name="position_y" type="double" value="0" />
+    <param name="yaw" type="double" value="0" />
+  </node>
+</launch>

@@ -1,0 +1,24 @@
+#footprint: [[-0.45, -0.35], [-0.45, 0.35], [0.45, 0.35], [0.45, -0.35]]
+robot_radius: 0.5
+obstacle_layer:
+  enabled: true
+  combination_method: 1
+  track_unknown_space: true
+  obstacle_range: 5.0
+  raytrace_range: 9.5
+  observation_sources: scan
+  scan:
+    {
+      sensor_frame: laser,
+      data_type: LaserScan,
+      topic: /scan_filtered,
+      marking: true,
+      clearing: true,
+    }
+
+inflation_layer:
+  enabled: true
+
+static_layer:
+  enabled: true
+  track_unknown_space: true

@@ -1,0 +1,15 @@
+<robot name="nurse">
+  <link name="base_link"/>
+  <link name="laser"/>
+  <link name="imu_link"/>
+  <joint name="joint_base_laser" type="fixed">
+    <parent link="base_link"/>
+    <child link="laser"/>
+    <origin rpy="0 0 0" xyz="0.34 0 0"/>
+  </joint>
+  <joint name="joint_base_imu" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin rpy="0 0 0" xyz="0.34 0 0"/>
+  </joint>
+</robot>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="configuration_directory" default="$(find turtlebot3_slam)/config/"/>
+    <arg name="configuration_basename" default="turtlebot3_lds_2d.lua"/>
+    <arg name="tracking_frame" default="imu_link"/>
+    <node name="cartographer_ros_initialpose" pkg="cartographer_ros_initialpose" type="cartographer_ros_initialpose_node" args="$(arg configuration_directory) $(arg configuration_basename)" output="screen">
+        <param name="tracking_frame" value="$(arg tracking_frame)"/>
+    </node>
+</launch>

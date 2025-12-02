@@ -1,0 +1,80 @@
+#ifndef AGV_ROBOT_CONTROL_TELEOP_H
+#define AGV_ROBOT_CONTROL_TELEOP_H
+#include <boost/thread/locks.hpp>
+#include <boost/thread/shared_mutex.hpp>
+#include <utility>
+
+#include "atomic"
+#include "geometry_msgs/Twist.h"
+#include "ros/ros.h"
+#include "sensor_msgs/Joy.h"
+#include "std_msgs/String.h"
+namespace CONTROLTELEOP {
+enum ControlTrigger {
+  Default,
+  NavOn,
+  NavPause,
+  ManipulateOn,
+  ChargeOn,
+  UpOn,
+  HomeOn,
+  AntiClockGo,
+  ClockGo,
+  SingleAntiClockGo,
+  SingleClockGo,
+  KnifeOn,
+  KnifeOff,
+  KnifeUnplug,
+  LightOn,
+  LightOff,
+  SteeringIn,
+  SteeringOut,
+  MappingOn,
+  MappingOff,
+  RobotArmOn,
+  NavigationOn,
+  ShutDown,
+  SaveCutPoint,
+  SaveChargePoint,
+  SaveNavPoint,
+  SaveTurnPoint,
+  ArmEmergencyChange,
+  LinearUp,
+  LinearDown,
+  LinearForward,
+  LinearBack,
+  CutBack
+};
+class ControlTeleop {
+ private:
+  const double WATCHDOG_PERIOD_ = 2.0;
+  ros::NodeHandle nh_;
+  ros::Timer joy_watchdog_timer_;
+  ros::Subscriber Joy_sub_;
+  ros::Publisher joy_vel_pub;
+  std::atomic_bool joy_alive_{};
+  bool publish_vel_{};
+  bool diff_drive_{};
+  ControlTrigger control_trigger_{};
+  double max_linear_velocity_{};
+  double max_angular_velocity_{};
+  mutable boost::shared_mutex control_trigger_mutex_;
+
+ public:
+  explicit ControlTeleop(bool publish_vel = false,
+                         double max_linear_velocity = 0.8,
+                         double max_angular_velocity = 0.5,
+                         bool diff_drive = true);
+  ~ControlTeleop() = default;
+  void JoyCallback(const sensor_msgs::JoyConstPtr &msg);
+  void Joywatchdog(const ros::TimerEvent &e);
+  ControlTrigger getControlTrigger() {
+    boost::unique_lock<boost::shared_mutex> writLock(control_trigger_mutex_);
+    ControlTrigger temp{control_trigger_};
+    control_trigger_ = Default;
+    return temp;
+  };
+};
+}  // namespace CONTROLTELEOP
+
+#endif  // AGV_ROBOT_CONTROL_TELEOP_H

@@ -1,0 +1,7 @@
+<launch>
+  <!-- Launch this file on remote computer for remote mapping -->
+  <!-- joy control -->
+  <node pkg = "agv_robot" type="joy_driver" name="joy_driver" output="screen"/>
+  <!-- rviz -->
+  <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find agv_robot)/rviz/mapping.rviz"/>
+</launch>

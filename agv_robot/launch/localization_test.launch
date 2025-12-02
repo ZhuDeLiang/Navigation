@@ -1,0 +1,32 @@
+<launch>
+  <!-- Arguments -->
+  <!-- If use remote control, you should unable 'use_local_joy', 'open_rviz', 'open_reconfigure',  -->
+  <!-- and run these nodes on remote computer -->
+<param name="use_sim_time" value="true" />
+  <arg name="use_local_joy" default="false"/>
+  <arg name="open_rviz" default="true"/>
+  <arg name="open_reconfigure" default="false"/>
+
+  <arg name="use_local_controller" default="true"/>
+  <arg name="map_file" default="$(find agv_robot)/maps/map.yaml"/>
+
+
+  <!-- rviz -->
+  <node if="$(arg open_rviz)" pkg="rviz" type="rviz" name="rviz" required="true"
+          args="-d $(find agv_robot)/rviz/navigation.rviz"/>
+
+
+  <!-- tf -->
+  <param name="robot_description" textfile="$(find agv_robot)/urdf/model.urdf"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+
+  <!-- odom by scan_match -->
+  <include file="$(find agv_robot)/launch/laser_scan_match.launch" />
+
+  <!-- Map server -->
+  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+  <!-- Cartographer localization -->
+  <include file="$(find agv_robot)/launch/cartographer_localization.launch" />
+
+</launch>
